@@ -109,20 +109,6 @@ public class Monitor implements Runnable
 
 	public void run()
 	{
-                //Console con = System.console();
-                /*
-		java.io.Console con = System.console();
-		if(con != null)
-		{
-			writer = con.writer();
-			reader = new BufferedReader(con.reader());
-		}
-		else
-		{
-			writer = new PrintWriter(System.out);
-			reader = new BufferedReader(new InputStreamReader(System.in));
-		}
-                */
 		running = true;
 		while(running)
 		{
