@@ -70,22 +70,65 @@ public class Monitor implements Runnable
 		cpu.setAddressSpace(memory);
 		cpu.reset();	//init cpu
 
-		new Console(cpu, memory);
+		VConsole vcon = new VConsole(cpu, memory);
 
-		Monitor monitor = new Monitor(cpu,memory);
+		Monitor monitor = new Monitor(cpu, memory);
+
+                monitor.setup_console();
+
+                // try to load and run program else the JAva monitor
 		if (args.length == 1) {
 			monitor.handleLoad(new String[] {"load", "0", args[0]});
+                        monitor.handleGo(new String[0]);
 		}
-		monitor.run();
-		monitor.handleGo(new String[0]);
+
+                monitor.run();
+
+                // close v console
+		vcon.dispose();
+		//vcon.dispatchEvent(new WindowEvent(frame, WindowEvent.WINDOW_CLOSING));
+
 	}
+
+        public void setup_console()
+	{
+
+               java.io.Console con = System.console();
+                if(con != null)
+                {
+                        writer = con.writer();
+                        reader = new BufferedReader(con.reader());
+                }
+                else
+                {
+                        writer = new PrintWriter(System.out);
+                        reader = new BufferedReader(new InputStreamReader(System.in));
+                }
+                running = true; 
+        }
 
 	public void run()
 	{
-		writer = new PrintWriter(System.out);
-		reader = new BufferedReader(new InputStreamReader(System.in));
-
 		running = true;
+		while(running)
+		{
+			try
+			{
+				writer.print("> ");
+				writer.flush();
+				handleCommand(reader.readLine());
+
+				if(autoRegs)
+				{
+					dumpInfo();
+				}
+			}
+			catch(IOException e)
+			{
+				e.printStackTrace();
+			}
+		}
+
 	}
 
 	protected void handleCommand(String line)
@@ -191,6 +234,7 @@ public class Monitor implements Runnable
 		int timer = 0;
 		int count = 0;
 		boolean going = true;
+
 
 		while(running && going)
 		{
@@ -935,6 +979,7 @@ public class Monitor implements Runnable
 		writer.println("  ml <address> [value]  - Set or view a long (32-bit) value at the specified address");
 		writer.println("  load <address> <file> - Load <file> into memory starting at <address>");
 		writer.println("Execution & Disassembly:");
+		writer.println("  g                     - Go start execution at PC starting address");
 		writer.println("  s                     - Execute the instruction at the PC register");
 		writer.println("  d <address> [count]   - Disassemble the memory starting at <address> for an optional");
 		writer.println("                          <count> instructions. Default is 8 instructions.");
