@@ -22,11 +22,11 @@ Once the zBug(ROM) loads simply type "j" and then "003000" to start Katy 68k
 
 Changes
 -------
-Application console uses a monospaced font now.
+* Application console uses a monospaced font now.
 
-The Java monitor is working again.
+* The Java monitor is working again.
 
-Add the Go command in the java monitor help page
+* Add the Go command in the java monitor help page
 
 
 After starting m68.jar whithout a file you have access to the java monitor. Try "h" to see the help page. Java monitor is also available after exception.
@@ -36,6 +36,7 @@ After starting m68.jar whithout a file you have access to the java monitor. Try 
         > h<CR>
 
 Then type:
+
         > load 0 linux-pcb.bin<CR>
         > g<CR>
 
