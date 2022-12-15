@@ -1268,6 +1268,7 @@ public abstract class CpuCore implements Cpu
 	}
 
 	//effective address handling
+       /* XXX
 	public void incrementAddrRegister(int reg, int numBytes)
 	{
 		addr_regs[reg] += numBytes;
@@ -1276,7 +1277,20 @@ public abstract class CpuCore implements Cpu
 	{
 		addr_regs[reg] -= numBytes;
 	}
+        */
+        public void incrementAddrRegister(int reg, int numBytes) {
+                if (reg == 7 && numBytes == 1) {
+                        numBytes = 2;
+                }
+                addr_regs[reg] += numBytes;
+        }
 
+        public void decrementAddrRegister(int reg, int numBytes) {
+                if (reg == 7 && numBytes == 1) {
+                        numBytes = 2;
+                }
+                addr_regs[reg] -= numBytes;
+        }
 	protected int signExtendByte(int value)
 	{
 		if((value & 0x80) == 0x80)
